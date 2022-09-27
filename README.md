@@ -26,3 +26,10 @@ optional arguments:
                         print NUM lines of context (default: 10)
   -v, --verbose         enable verbose mode (default: False)
 ```
+
+```
+$ cd samples
+$ wget "https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.19.11.tar.xz"
+$ tar -xvf linux-5.19.11.tar.xz
+$ python ../redebug.py 0001-usb-cdns3-remove-dead-code.patch linux-5.19.11/drivers/usb/
+```

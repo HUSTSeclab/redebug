@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ReDeBug - Report</title>
+    <style type="text/css">
+    .container { padding: 3px 3px 3px 3px; font-size: 14px; }
+    .patch { background-color: #CCCCCC; border: 2px solid #555555; margin: 0px 0px 5px 0px }
+    .source { background-color: #DDDDDD; padding: 3px 3px 3px 3px; margin: 0px 0px 5px 0px }
+    .filepath { font-size: small; font-weight: bold; color: #0000AA; padding: 5px 5px 5px 5px; }
+    .codechunk { font-family: monospace; font-size: small; white-space: pre-wrap; padding: 0px 0px 0px 50px; }
+    .linenumber { font-family: monospace; font-size: small; float: left; color: #777777; }
+    </style>
+    <script language="javascript">
+        function togglePrev(node) {
+            var targetDiv = node.previousSibling;
+            targetDiv.style.display = (targetDiv.style.display=='none')?'block':'none';
+            node.innerHTML = (node.innerHTML=='+ show +')?'- hide -':'+ show +';
+        }
+        function toggleNext(node) {
+            var targetDiv = node.nextSibling;
+            targetDiv.style.display = (targetDiv.style.display=='none')?'block':'none';
+            node.innerHTML = (node.innerHTML=='+ show +')?'- hide -':'+ show +';
+        }
+    </script>
+</head>
+<body>
+<div style="width: 100%; margin: 0px auto">
+    <b># <i>unpatched code clones:</i> <font style="color:red">1</font></b>
+    <div class="container">
+        <br />
+        <div class="patch">
+            <div class="filepath">[0001-usb-cdns3-remove-dead-code.patch] cdns3-plat.c #1</div>
+            <div class="codechunk"> 	cdns-&gt;wakeup_irq = platform_get_irq_byname_optional(pdev, "wakeup");
+ 	if (cdns-&gt;wakeup_irq == -EPROBE_DEFER)
+ 		return cdns-&gt;wakeup_irq;
+<font color="#AA0000">-	else if (cdns-&gt;wakeup_irq == 0)
+</font><font color="#AA0000">-		return -EINVAL;
+</font> 
+ 	if (cdns-&gt;wakeup_irq &lt; 0) {
+ 		dev_dbg(dev, "couldn't get wakeup irq\n");
+</div>
+        </div>
+        <div class="source">
+            <div class="filepath">linux-5.19.11/drivers/usb/cdns3/cdns3-plat.c</div>
+            <div style="display: none">
+                <div class="linenumber">
+                100<br />
+                101<br />
+                102<br />
+                103<br />
+                104<br />
+                105<br />
+                106<br />
+                107<br />
+                108<br />
+                109<br />
+                </div>
+                <div class="codechunk">	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, &quot;otg&quot;);
+	if (!res) {
+		dev_err(dev, &quot;couldn&apos;t get otg resource\n&quot;);
+		return -ENXIO;
+	}
+
+	cdns-&gt;phyrst_a_enable = device_property_read_bool(dev, &quot;cdns,phyrst-a-enable&quot;);
+
+	cdns-&gt;otg_res = *res;
+</div>
+            </div><a href="javascript:;" onclick="togglePrev(this);">+ show +</a>
+            <div>
+                <div class="linenumber">
+                110<br />
+                111<br />
+                112<br />
+                113<br />
+                114<br />
+                115<br />
+                116<br />
+                117<br />
+                </div>
+                <div class="codechunk">	cdns-&gt;wakeup_irq = platform_get_irq_byname_optional(pdev, &quot;wakeup&quot;);
+	if (cdns-&gt;wakeup_irq == -EPROBE_DEFER)
+		return cdns-&gt;wakeup_irq;
+	else if (cdns-&gt;wakeup_irq == 0)
+		return -EINVAL;
+
+	if (cdns-&gt;wakeup_irq &lt; 0) {
+		dev_dbg(dev, &quot;couldn&apos;t get wakeup irq\n&quot;);</div>
+            </div>
+            <a href="javascript:;" onclick="toggleNext(this);">+ show +</a><div style="display: none">
+                <div class="linenumber">
+                118<br />
+                119<br />
+                120<br />
+                121<br />
+                122<br />
+                123<br />
+                124<br />
+                125<br />
+                126<br />
+                127<br />
+                </div>
+                <div class="codechunk">		cdns-&gt;wakeup_irq = 0x0;
+	}
+
+	cdns-&gt;usb2_phy = devm_phy_optional_get(dev, &quot;cdns3,usb2-phy&quot;);
+	if (IS_ERR(cdns-&gt;usb2_phy))
+		return PTR_ERR(cdns-&gt;usb2_phy);
+
+	ret = phy_init(cdns-&gt;usb2_phy);
+	if (ret)
+		return ret;</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

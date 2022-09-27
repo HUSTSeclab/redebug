@@ -1,0 +1,36 @@
+From a095f9e0fee45fe60601b7909f650537d4b524c3 Mon Sep 17 00:00:00 2001
+From: Dongliang Mu <mudongliangabcd@gmail.com>
+Date: Mon, 26 Sep 2022 21:54:54 +0800
+Subject: [PATCH] usb: cdns3: remove dead code
+
+Smatch reports the following error:
+
+drivers/usb/cdns3/cdns3-plat.c:113 cdns3_plat_probe() warn:
+platform_get_irq() does not return zero
+
+From the document, platform_get_irq_byname_optional only returns
+non-zero value, and negative value on failure.
+
+Fix this by removing the zero value checking.
+
+Signed-off-by: Dongliang Mu <mudongliangabcd@gmail.com>
+---
+ drivers/usb/cdns3/cdns3-plat.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/usb/cdns3/cdns3-plat.c b/drivers/usb/cdns3/cdns3-plat.c
+index dc068e940ed5..2bc5d094548b 100644
+--- a/drivers/usb/cdns3/cdns3-plat.c
++++ b/drivers/usb/cdns3/cdns3-plat.c
+@@ -110,8 +110,6 @@ static int cdns3_plat_probe(struct platform_device *pdev)
+ 	cdns->wakeup_irq = platform_get_irq_byname_optional(pdev, "wakeup");
+ 	if (cdns->wakeup_irq == -EPROBE_DEFER)
+ 		return cdns->wakeup_irq;
+-	else if (cdns->wakeup_irq == 0)
+-		return -EINVAL;
+ 
+ 	if (cdns->wakeup_irq < 0) {
+ 		dev_dbg(dev, "couldn't get wakeup irq\n");
+-- 
+2.35.1
+
