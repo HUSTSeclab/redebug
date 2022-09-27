@@ -17,7 +17,7 @@ try:
     import argparse
     import magic
 except ImportError as err:
-    print err
+    print(err)
     sys.exit(-1)
 
 
@@ -46,8 +46,8 @@ def parse_args():
         common.context_line = args.context_line
         common.verbose_mode = args.verbose_mode
         return args.patch_path, args.source_path
-    except IOError, msg:
-        parser.error(str(msg))
+    except IOError as msg:
+        parser.error(msg)
 
 
 if __name__ == '__main__':
@@ -91,5 +91,5 @@ if __name__ == '__main__':
         sys.exit(1)
 
     elapsed_time = time.time() - start_time
-    print '[+] %d matches given %d patches ... %.1fs' % (exact_nmatch, npatch, elapsed_time)
+    print('[+] %d matches given %d patches ... %.1fs' % (exact_nmatch, npatch, elapsed_time))
 

@@ -58,7 +58,7 @@ def file_type(file_path):
 
 def verbose_print(text):
     if verbose_mode:
-        print '%s' % text
+        print('%s' % text)
 
 def fnv1a_hash(string):
     '''

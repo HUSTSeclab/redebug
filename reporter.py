@@ -24,7 +24,7 @@ class Reporter(object):
         '''
         Exact-matching test to catch Bloom filters errors
         '''
-        print '[+] performing an exact matching test'
+        print('[+] performing an exact matching test')
         start_time = time.time()
         exact_nmatch = 0
 
@@ -55,7 +55,7 @@ class Reporter(object):
                             break
 
         elapsed_time = time.time() - start_time
-        print '[+] %d exact matches ... %.1fs\n' % (exact_nmatch, elapsed_time)
+        print('[+] %d exact matches ... %.1fs\n' % (exact_nmatch, elapsed_time))
         return exact_nmatch
 
     def _html_escape(self, string):
@@ -72,7 +72,7 @@ class Reporter(object):
         if exact_nmatch == 0:
             return exact_nmatch
 
-        print '[+] generating a report'
+        print('[+] generating a report')
         start_time = time.time()
 
         out = open(outfile, 'w')
@@ -175,6 +175,6 @@ class Reporter(object):
         out.close()
 
         elapsed_time = time.time() - start_time
-        print '[+] \"%s\" ... %.1fs\n' % (outfile, elapsed_time)
+        print('[+] \"%s\" ... %.1fs\n' % (outfile, elapsed_time))
         return exact_nmatch
 

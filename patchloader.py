@@ -20,7 +20,7 @@ class PatchLoader(object):
         '''
         Traverse patch files
         '''
-        print '[+] traversing patch files'
+        print('[+] traversing patch files')
         start_time = time.time()
 
         if os.path.isfile(patch_path):
@@ -41,7 +41,7 @@ class PatchLoader(object):
         self._npatch = len(self._patch_list)
 
         elapsed_time = time.time() - start_time
-        print '[+] %d patches ... %.1fs\n' % (self._npatch, elapsed_time)
+        print('[+] %d patches ... %.1fs\n' % (self._npatch, elapsed_time))
         return self._npatch
 
     def _process(self, patch_path):
@@ -64,12 +64,12 @@ class PatchLoader(object):
                 if diff_vuln_lines:
                     diff_norm_lines = self._normalize(''.join(diff_vuln_lines), magic_ext).split()
                     if len(diff_norm_lines) >= common.ngram_size:
-                        common.verbose_print('      %s %d (ext: %d)' % (diff_file, diff_cnt, magic_ext))
+                        common.verbose_print('      [-] %s %d (ext: %d)' % (diff_file, diff_cnt, magic_ext))
                         path = '[%s] %s #%d' % (patch_filename, diff_file, diff_cnt)
                         hash_list = self._build_hash_list(diff_norm_lines)
                         self._patch_list.append(common.PatchInfo(path, magic_ext, ''.join(diff_orig_lines), diff_norm_lines, hash_list))
                     else:
-                        common.verbose_print('      %s %d (ext: %d) - skipped (%d lines)' % (diff_file, diff_cnt, magic_ext, len(diff_norm_lines)))
+                        common.verbose_print('      [-] %s %d (ext: %d) - skipped (%d lines)' % (diff_file, diff_cnt, magic_ext, len(diff_norm_lines)))
                     del diff_vuln_lines[:]
                     del diff_orig_lines[:]
 
@@ -83,6 +83,9 @@ class PatchLoader(object):
                     magic_ext = self._get_file_type(diff_file)
 
             elif process_flag:
+                # exclude the line '--' at the end of `git format-patch -1`
+                if line.startswith('--'):
+                    continue
                 if line.startswith('+++ '):
                     diff_path = line.split()[1]
                     if diff_path == '/dev/null':
@@ -92,12 +95,12 @@ class PatchLoader(object):
                     if diff_vuln_lines:
                         diff_norm_lines = self._normalize(''.join(diff_vuln_lines), magic_ext).split()
                         if len(diff_norm_lines) >= common.ngram_size:
-                            common.verbose_print('      %s %d (ext: %d)' % (diff_file, diff_cnt, magic_ext))
+                            common.verbose_print('      [-] %s %d (ext: %d)' % (diff_file, diff_cnt, magic_ext))
                             path = '[%s] %s #%d' % (patch_filename, diff_file, diff_cnt)
                             hash_list = self._build_hash_list(diff_norm_lines)
                             self._patch_list.append(common.PatchInfo(path, magic_ext, ''.join(diff_orig_lines), diff_norm_lines, hash_list))
                         else:
-                            common.verbose_print('      %s %d (ext: %d) - skipped (%d lines)' % (diff_file, diff_cnt, magic_ext, len(diff_norm_lines)))
+                            common.verbose_print('      [-] %s %d (ext: %d) - skipped (%d lines)' % (diff_file, diff_cnt, magic_ext, len(diff_norm_lines)))
                         del diff_vuln_lines[:]
                         del diff_orig_lines[:]
                     diff_cnt += 1
@@ -120,12 +123,12 @@ class PatchLoader(object):
         if diff_vuln_lines:
             diff_norm_lines = self._normalize(''.join(diff_vuln_lines), magic_ext).split()
             if len(diff_norm_lines) >= common.ngram_size:
-                common.verbose_print('      %s %d (ext: %d)' % (diff_file, diff_cnt, magic_ext))
+                common.verbose_print('      [-] %s %d (ext: %d)' % (diff_file, diff_cnt, magic_ext))
                 path = '[%s] %s #%d' % (patch_filename, diff_file, diff_cnt)
                 hash_list = self._build_hash_list(diff_norm_lines)
                 self._patch_list.append(common.PatchInfo(path, magic_ext, ''.join(diff_orig_lines), diff_norm_lines, hash_list))
             else:
-                common.verbose_print('      %s %d (ext: %d) - skipped (%d lines)' % (diff_file, diff_cnt, magic_ext, len(diff_norm_lines)))
+                common.verbose_print('      [-] %s %d (ext: %d) - skipped (%d lines)' % (diff_file, diff_cnt, magic_ext, len(diff_norm_lines)))
 
     def _normalize(self, patch, ext):
         '''

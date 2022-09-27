@@ -13,7 +13,7 @@ import common
 try:
     import bitarray
 except ImportError as err:
-    print err
+    print(err)
     sys.exit(-1)
 
 
@@ -32,7 +32,7 @@ class SourceLoader(object):
         '''
         Traverse source files
         '''
-        print '[+] traversing source files'
+        print('[+] traversing source files')
         start_time = time.time()
         self._patch_list = patch.items()
         self._npatch = patch.length()
@@ -56,14 +56,14 @@ class SourceLoader(object):
                         self._process(file_path, magic_ext)
 
         elapsed_time = time.time() - start_time
-        print '[+] %d possible matches ... %.1fs\n' % (self._nmatch, elapsed_time)
+        print('[+] %d possible matches ... %.1fs\n' % (self._nmatch, elapsed_time))
         return self._nmatch
 
     def _process(self, source_path, magic_ext):
         '''
         Normalize a source file and build a Bloom filter for queries
         '''
-        source_file = open(source_path, 'r')
+        source_file = open(source_path, 'r', encoding = 'utf-8')
         source_orig_lines = source_file.read()
         source_file.close()
 
@@ -125,7 +125,7 @@ class SourceLoader(object):
     def _query_bloomfilter(self, source_norm_lines, magic_ext):
         source_norm_lines = source_norm_lines.split()
         if len(source_norm_lines) < common.ngram_size:
-            common.verbose_print('      - skipped (%d lines)' % len(source_norm_lines))
+            common.verbose_print('      [-] skipped (%d lines)' % len(source_norm_lines))
             return False
 
         self._bit_vector.setall(0)
@@ -134,7 +134,7 @@ class SourceLoader(object):
         num_ngram_processed = 0
         for i in range(0, num_ngram):
             if num_ngram_processed > common.bloomfilter_size/common.min_mn_ratio:
-                common.verbose_print('      - split Bloom filters (%d n-grams)' % num_ngram_processed)
+                common.verbose_print('      [-] split Bloom filters (%d n-grams)' % num_ngram_processed)
                 for patch_id in range(0, self._npatch):
                     if magic_ext == self._patch_list[patch_id].file_ext:
                         hash_list = self._patch_list[patch_id].hash_list
@@ -146,7 +146,7 @@ class SourceLoader(object):
                         if is_match:
                             is_vuln_source = True
                             self._match_dict[patch_id].append(self._nsource)
-                            common.verbose_print('      - match (patch #%d : source #%d)' % (patch_id, self._nsource))
+                            common.verbose_print('      [-] match (patch #%d : source #%d)' % (patch_id, self._nsource))
                             self._nmatch += 1
                 num_ngram_processed = 0
                 self._bit_vector.setall(0)
@@ -171,7 +171,7 @@ class SourceLoader(object):
                 if is_match:
                     is_vuln_source = True
                     self._match_dict[patch_id].append(self._nsource)
-                    common.verbose_print('      - match (patch #%d : source #%d)' % (patch_id, self._nsource))
+                    common.verbose_print('      [-] match (patch #%d : source #%d)' % (patch_id, self._nsource))
                     self._nmatch += 1
 
         return is_vuln_source
